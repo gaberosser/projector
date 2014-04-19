@@ -4,7 +4,8 @@ import os
 import sys
 import subprocess
 import models
-import re
+import cv2
+import cv
 
 movie_extensions = [
     'avi',
@@ -12,6 +13,21 @@ movie_extensions = [
     'divx',
     'mkv'
 ]
+
+def count_frames(infile):
+    vc = cv2.VideoCapture(infile)
+    if vc.isOpened():
+        count = -1
+        rval = True
+        while rval:
+            rval, frame = vc.read()
+            count += 1
+            if frame is None:
+                break
+        return count
+    else:
+        return 0
+
 
 
 def populate_drive():
@@ -35,12 +51,25 @@ def populate_drive():
             if retval != 0:
                 print "Unable to read file: %s" % f
                 continue
-            # process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            # out, err = process.communicate()
+
+            # try to generate thumbnail
+            thumbnail = None
+            try:
+                # vs = cv2.VideoCapture(f)
+                # if vs.isOpened():
+                #     rval, frame = vs.open()
+                vs = cv.CaptureFromFile(f)
+                num_frames = cv.GetCaptureProperty(vs, cv.CV_CAP_PROP_FRAME_COUNT)
+                if num_frames == 0:
+                    print "No frames detected: %s" % f
+                    break
+
+            except Exception as exc:
+                print repr(exc)
 
             # create entry
             try:
-                dr = models.Drive(path=f, name=f)
+                dr = models.Videos(path=f, name=f)
                 dr.save()
                 movie_files.append(dr)
                 print dr

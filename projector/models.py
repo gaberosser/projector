@@ -1,13 +1,14 @@
 __author__ = 'gabriel'
 from django.db import models
 
-class Drive(models.Model):
+class Videos(models.Model):
     name = models.CharField(max_length=256)
     path = models.CharField(max_length=256, unique=True)
     series_no = models.IntegerField(null=True, blank=True)
     episode_no = models.IntegerField(null=True, blank=True)
     media_type = models.ForeignKey('FileType', null=True, blank=True)
     genre = models.ForeignKey('Genre', null=True, blank=True)
+    thumbnail = models.ImageField(upload_to='thumbnails', null=True, blank=True)
 
 
 class FileType(models.Model):
