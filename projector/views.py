@@ -6,6 +6,7 @@ import subprocess
 import models
 import cv2
 import cv
+import json
 
 movie_extensions = [
     'avi',
@@ -13,6 +14,7 @@ movie_extensions = [
     'divx',
     'mkv'
 ]
+
 
 def count_frames(infile):
     vc = cv2.VideoCapture(infile)
@@ -28,6 +30,9 @@ def count_frames(infile):
     else:
         return 0
 
+
+def retrieve_thumbnail(video):
+    pass
 
 
 def populate_drive():
@@ -78,3 +83,4 @@ def populate_drive():
                 pass
 
     return movie_files
+
